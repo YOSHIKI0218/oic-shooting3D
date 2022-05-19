@@ -10,11 +10,16 @@
 //INCLUDE
 #include	"GameApp.h"
 #include	"Player.h"
+#include	"Stage.h"
 
 CCamera				gCamera;
 CDirectionalLight	gLight;
 CPlayer				gPlayer;
+CStage				gStage;
 bool				gbDebug = false;
+
+
+
 
 /*************************************************************************//*!
 		@brief			アプリケーションの初期化
@@ -28,7 +33,10 @@ MofBool CGameApp::Initialize(void){
 	CUtilities::SetCurrentDirectory("Resource");
 
 	gCamera.SetViewPort();
-	gCamera.LookAt(Vector3(0, 6.0f, -17.0f), Vector3(0, 0, -10), Vector3(0, 1, 0));
+	gCamera.LookAt
+		(Vector3(0, 6.0f, -17.0f),
+		 Vector3(0, 0, -10), 
+		 Vector3(0, 1, 0));
 	gCamera.PerspectiveFov(MOF_ToRadian(60.0f), 1024.0f / 768.0f, 0.01f, 1000.0f);
 	CGraphicsUtilities::SetCamera(&gCamera);
 
@@ -39,8 +47,10 @@ MofBool CGameApp::Initialize(void){
 	CGraphicsUtilities::SetDirectionalLight(&gLight);
 
 	gPlayer.Load();
+	gStage.Load();
 
 	gPlayer.Initialize();
+	gStage.Initialize();
 	
 	return TRUE;
 }
@@ -55,6 +65,7 @@ MofBool CGameApp::Update(void){
 	//キーの更新
 	g_pInput->RefreshKey();
 
+	gStage.Update();
 	gPlayer.Update();
 
 	if (g_pInput->IsKeyPush(MOFKEY_F1))
@@ -63,9 +74,10 @@ MofBool CGameApp::Update(void){
 	float posX = gPlayer.GetPosition().x * 0.4f;
 	CVector3 cpos = gCamera.GetViewPosition();
 	CVector3 tpos = gCamera.GetTargetPosition();
-	CVector3 vup = CVector3(0, 1, 0);
+	CVector3 vup  = CVector3(0, 1, 0);
 	cpos.x = posX;
 	tpos.x = posX;
+	vup.RotationZ(gPlayer.GetPosition().x / FIELD_HALF_X * MOF_ToRadian(10.0f));
 	gCamera.LookAt(cpos, tpos, vup);
 	gCamera.Update();
 
@@ -87,6 +99,7 @@ MofBool CGameApp::Render(void){
 
 	g_pGraphics->SetDepthEnable(TRUE);
 
+	gStage.Render();
 	gPlayer.Render();
 
 	if (gbDebug) {
@@ -98,6 +111,7 @@ MofBool CGameApp::Render(void){
 	g_pGraphics->SetDepthEnable(FALSE);
 
 	if (gbDebug)
+		gStage.RenderDebugText();
 		gPlayer.RenderDebugText();
 	// 描画の終了
 	g_pGraphics->RenderEnd();
@@ -112,5 +126,7 @@ MofBool CGameApp::Render(void){
 *//**************************************************************************/
 MofBool CGameApp::Release(void){
 	gPlayer.Release();
+	gStage.Release();
+
 	return TRUE;
 }

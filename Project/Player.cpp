@@ -38,30 +38,37 @@ void CPlayer::Initialize(void){
  */
 void CPlayer::Update(void){
 	float Roll = 0;
+	float PSpeed = PLAYER_SPEED;
+	float RotSpeed = MOF_ToRadian(10);
+	if (g_pInput->IsKeyHold(MOFKEY_Z))
+	{
+		 PSpeed *= 2.5;
+		 RotSpeed *= 2.5;
+	}
 	if (g_pInput->IsKeyHold(MOFKEY_LEFT))
 	{
-		m_Pos.x = max(m_Pos.x - PLAYER_SPEED, -FIELD_HALF_X);
-		Roll -= MOF_MATH_PI;
+		m_Pos.x = max(m_Pos.x - PSpeed, -FIELD_HALF_X);
+		m_RotZ += RotSpeed;
 	}
 	if (g_pInput->IsKeyHold(MOFKEY_RIGHT))
 	{
-		m_Pos.x = min(m_Pos.x + PLAYER_SPEED, FIELD_HALF_X);
-		Roll += MOF_MATH_PI;
+		m_Pos.x = min(m_Pos.x + PSpeed, FIELD_HALF_X);
+		m_RotZ -= RotSpeed;
 	}
 	if (g_pInput->IsKeyHold(MOFKEY_UP))
 	{
-		m_Pos.z = min(m_Pos.z + PLAYER_SPEED, FIELD_HALF_Z);
+		m_Pos.z = min(m_Pos.z + PSpeed, FIELD_HALF_Z);
 	}
 	if (g_pInput->IsKeyHold(MOFKEY_DOWN))
 	{
-		m_Pos.z = max(m_Pos.z - PLAYER_SPEED, -FIELD_HALF_Z);
+		m_Pos.z = max(m_Pos.z - PSpeed, -FIELD_HALF_Z);
 	}
-	float RotSpeed = MOF_ToRadian(10);
-	if (Roll == 0)
+
+	/*if (Roll == 0)
 		RotSpeed = min(abs(m_RotZ) * 0.1f, RotSpeed);
 	if(abs(m_RotZ) <= RotSpeed || signbit(m_RotZ) != signbit(Roll))
 		m_RotZ += Roll;
-	m_RotZ -= copysignf(min(RotSpeed, abs(m_RotZ)), m_RotZ);
+	m_RotZ -= copysignf(min(RotSpeed, abs(m_RotZ)), m_RotZ);*/
 }
 
 /**
