@@ -11,10 +11,13 @@
 #include	"GameApp.h"
 #include	"Player.h"
 #include	"Stage.h"
+#include	"Stage1.h"
 
 CCamera				gCamera;
 CDirectionalLight	gLight;
 CPlayer				gPlayer;
+#define				ENEMY_COUNT		(20)
+CEnemy				gEnemyArray[ENEMY_COUNT];
 CStage				gStage;
 bool				gbDebug = false;
 
@@ -50,7 +53,11 @@ MofBool CGameApp::Initialize(void){
 	gStage.Load();
 
 	gPlayer.Initialize();
-	gStage.Initialize();
+	gStage.Initialize(&gStg1EnemyStart);
+	for (int i = 0; i < ENEMY_COUNT; i++)
+	{
+		gEnemyArray[i].Update();
+	}
 	
 	return TRUE;
 }
@@ -65,8 +72,11 @@ MofBool CGameApp::Update(void){
 	//キーの更新
 	g_pInput->RefreshKey();
 
-	gStage.Update();
+	gStage.Update(gEnemyArray,ENEMY_COUNT);
 	gPlayer.Update();
+	for (int i = 0 ; i < ENEMY_COUNT; i++) {
+		gEnemyArray[i].Update();
+	}
 
 	if (g_pInput->IsKeyPush(MOFKEY_F1))
 		gbDebug = ((gbDebug) ? false : true);
@@ -102,6 +112,10 @@ MofBool CGameApp::Render(void){
 	gStage.Render();
 	gPlayer.Render();
 
+	for (int i = 0; i < ENEMY_COUNT; i++) {
+		gEnemyArray[i].Render();
+	}
+
 	if (gbDebug) {
 		CMatrix44 matWorld;
 		matWorld.Scaling(FIELD_HALF_X * 2, 1, FIELD_HALF_Z * 2);
@@ -113,6 +127,9 @@ MofBool CGameApp::Render(void){
 	if (gbDebug)
 		gStage.RenderDebugText();
 		gPlayer.RenderDebugText();
+		for (int i = 0; i < ENEMY_COUNT; i++) {
+			gEnemyArray[i].RenderDebugText(i);
+		}
 	// 描画の終了
 	g_pGraphics->RenderEnd();
 	return TRUE;
