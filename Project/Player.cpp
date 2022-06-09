@@ -7,6 +7,7 @@ CPlayer::CPlayer() :
 m_Mesh(),
 m_Pos(0.0f,0.0f,0.0f),
 m_RotZ(0.0f),
+m_bDead(false),
 m_ShotMesh(),
 m_ShotArray(),
 m_ShotWait(){
@@ -38,7 +39,7 @@ bool CPlayer::Load(void){
 void CPlayer::Initialize(void){
 	m_Pos = Vector3(0.0f, 0.0f, -FIELD_HALF_Z + 2.0f);
 	m_RotZ = 0;
-	
+	m_bDead = false;
 	for (int i = 0; i < PLAYERSHOT_COUNT; i++)
 		m_ShotArray[i].Initialize();
 
@@ -48,6 +49,9 @@ void CPlayer::Initialize(void){
  * 更新
  */
 void CPlayer::Update(void){
+	if (m_bDead) {
+		return;
+	}
 	float Roll = 0;
 	float PSpeed = PLAYER_SPEED;
 	float RotSpeed = MOF_ToRadian(10);
@@ -116,6 +120,9 @@ void CPlayer::Update(void){
  * 描画
  */
 void CPlayer::Render(void){
+	if (m_bDead) {
+		return;
+	}
 	CMatrix44 matWorld;
 	matWorld.RotationZ(m_RotZ);
 	matWorld.SetTranslation(m_Pos);
@@ -131,6 +138,36 @@ void CPlayer::RenderDebugText(void){
 	// 位置の描画
 	CGraphicsUtilities::RenderString(10,40,MOF_XRGB(0,0,0),
 			"プレイヤー位置 X : %.1f , Y : %.1f , Z : %.1f",m_Pos.x,m_Pos.y,m_Pos.z);
+}
+
+void CPlayer::RenderDebug(void) {
+	CGraphicsUtilities::RenderSphere(GetSphere(), Vector4(0, 1, 0, 0.3f));
+	for (int i = 0; i < PLAYERSHOT_COUNT; i++)
+	{
+		m_ShotArray[i].RenderDebug();
+	}
+}
+
+void CPlayer::CollisionEnemy(CEnemy& ene) {
+	if (!ene.GetShow()) {
+		return;
+	}
+	CSphere ps = GetSphere();
+	CSphere es = ene.GetSphere();
+	if (ps.CollisionSphere(es)) {
+		m_bDead = true;
+	}
+	for (int i = 0; i < PLAYERSHOT_COUNT; i++) {
+		if (!m_ShotArray[i].GetShow()) {
+			continue;
+		}
+		CSphere ss = m_ShotArray[i].GetSphere();
+		if (ss.CollisionSphere(es)) {
+			ene.Damage(1);
+			m_ShotArray[i].SetShow(false);
+			break;
+		}
+	}
 }
 
 /**
