@@ -11,6 +11,7 @@
 #define FIELD_HALF_X (9.0f)
 #define FIELD_HALF_Z (14.0f)
 
+//#define PLAYER_MAX_LIFE	(5)
 //イージングの種類
 enum EASING_TYPE
 {
@@ -27,5 +28,7 @@ struct ANIM_DATA
 	float		Value;
 	EASING_TYPE	EasingType;
 };
+
+
 
 float InterpolationAnim(float AnimTime, ANIM_DATA* AnimData, int cnt);

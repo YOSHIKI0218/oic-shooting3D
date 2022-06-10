@@ -18,6 +18,9 @@ CDirectionalLight	gLight;
 CPlayer				gPlayer;
 #define				ENEMY_COUNT		(20)
 CEnemy				gEnemyArray[ENEMY_COUNT];
+#define				ENEMYSHOT_COUNT	(200)
+CEnemyShot			gShotArray[ENEMYSHOT_COUNT];
+CMeshContainer		gEnemyShotMesh;
 CStage				gStage;
 bool				gbDebug = false;
 
@@ -52,11 +55,22 @@ MofBool CGameApp::Initialize(void){
 	gPlayer.Load();
 	gStage.Load();
 
+
+	if (!gEnemyShotMesh.Load("eshot.mom")) {
+		return false;
+	}
+
+
 	gPlayer.Initialize();
 	gStage.Initialize(&gStg1EnemyStart);
 	for (int i = 0; i < ENEMY_COUNT; i++)
 	{
-		gEnemyArray[i].Update();
+		gEnemyArray[i].Initialize();
+	}
+
+	for (int i = 0; i < ENEMYSHOT_COUNT; i++) {
+		gShotArray[i].Initialize();
+		gShotArray[i].SetMesh(&gEnemyShotMesh);
 	}
 	
 	return TRUE;
@@ -75,7 +89,12 @@ MofBool CGameApp::Update(void){
 	gStage.Update(gEnemyArray,ENEMY_COUNT);
 	gPlayer.Update();
 	for (int i = 0 ; i < ENEMY_COUNT; i++) {
-		gEnemyArray[i].Update();
+		gEnemyArray[i].SetTargetPos(gPlayer.GetPosition());
+		gEnemyArray[i].Update(gShotArray, ENEMYSHOT_COUNT);
+	}
+
+	for (int i = 0; i < ENEMYSHOT_COUNT; i++) {
+		gShotArray[i].Update();
 	}
 
 
@@ -83,6 +102,9 @@ MofBool CGameApp::Update(void){
 		gPlayer.CollisionEnemy(gEnemyArray[i]);
 	}
 
+	for (int i = 0; i < ENEMYSHOT_COUNT; i++) {
+		gPlayer.CollisionEnemyShot(gShotArray[i]);
+	}
 
 	if (g_pInput->IsKeyPush(MOFKEY_F1))
 		gbDebug = ((gbDebug) ? false : true);
@@ -92,6 +114,9 @@ MofBool CGameApp::Update(void){
 		gStage.Initialize(&gStg1EnemyStart);
 		for (int i = 0; i < ENEMY_COUNT; i++) {
 			gEnemyArray[i].Initialize();
+		}
+		for (int i = 0; i < ENEMYSHOT_COUNT; i++) {
+			gShotArray[i].Initialize();
 		}
 	}
 
@@ -130,10 +155,17 @@ MofBool CGameApp::Render(void){
 		gEnemyArray[i].Render();
 	}
 
+	for (int i = 0; i < ENEMYSHOT_COUNT; i++) {
+		gShotArray[i].Render();
+	}
+
 	if (gbDebug) {
 		gPlayer.RenderDebug();
 		for (int i = 0; i < ENEMY_COUNT; i++) {
 			gEnemyArray[i].RenderDebug();
+		}
+		for (int i = 0; i < ENEMYSHOT_COUNT; i++) {
+			gShotArray[i].RenderDebug();
 		}
 
 		CMatrix44 matWorld;
@@ -170,6 +202,6 @@ MofBool CGameApp::Render(void){
 MofBool CGameApp::Release(void){
 	gPlayer.Release();
 	gStage.Release();
-
+	gEnemyShotMesh.Release();
 	return TRUE;
 }

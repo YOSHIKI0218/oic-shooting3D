@@ -15,6 +15,7 @@ private:
 	Vector3				m_TargetPos;
 
 	float				m_AnimTime;
+	int					m_PLife;
 
 public:
 	CEnemy();

@@ -129,6 +129,8 @@ void CPlayer::Render(void){
 	m_Mesh.Render(matWorld);
 	for (int i = 0; i < PLAYERSHOT_COUNT; i++)
 		m_ShotArray[i].Render();
+
+	
 }
 
 /**
@@ -167,6 +169,18 @@ void CPlayer::CollisionEnemy(CEnemy& ene) {
 			m_ShotArray[i].SetShow(false);
 			break;
 		}
+	}
+}
+
+void CPlayer::CollisionEnemyShot(CEnemyShot& shot) {
+	CSphere ps = GetSphere();
+	if (!shot.GetShow()) {
+		return;
+	}
+	CSphere ss = shot.GetSphere();
+	if (ss.CollisionSphere(ps)) {
+		m_bDead = true;
+		shot.SetShow(false);
 	}
 }
 
