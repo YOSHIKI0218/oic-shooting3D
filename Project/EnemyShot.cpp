@@ -52,7 +52,7 @@ void CEnemyShot::Update() {
 		return;
 	}
 	// ‘¬“x‚ğ—˜—p‚µ‚½ˆÚ“®
-	m_Pos += m_Spd;
+	m_Pos += m_Spd * 3 ;
 
 	// ‰æ–ÊŠO‚ÅÁ‹
 	float inflate = 1.0f;

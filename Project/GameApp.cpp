@@ -116,7 +116,7 @@ MofBool CGameApp::Update(void){
 			gEnemyArray[i].Initialize();
 		}
 		for (int i = 0; i < ENEMYSHOT_COUNT; i++) {
-			gShotArray[i].Initialize();
+			/*gShotArray[i].Initialize();*/
 		}
 	}
 
