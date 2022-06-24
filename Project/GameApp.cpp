@@ -121,6 +121,7 @@ MofBool CGameApp::Update(void){
 	for (int i = 0; i < ENEMYSHOT_COUNT; i++) {
 		gPlayer.CollisionEnemyShot(gShotArray[i]);
 	}
+	gPlayer.CollisionBoss(gBoss);
 
 	// 雑魚全滅判定
 	if (!gbEnemyDestroyed && gStage.IsAllEnemy())
@@ -141,6 +142,9 @@ MofBool CGameApp::Update(void){
 			gBoss.SetTargetPos(gPlayer.GetPosition());
 			gBoss.Update(gShotArray, ENEMYSHOT_COUNT);
 		}
+	}
+	if (!gbClear && gbEnemyDestroyed && !gBoss.GetShow()) {
+		gbClear = true;
 	}
 	// ゲームオーバー、ゲームクリアー表示後に Enter で初期化を行う
 	if (g_pInput->IsKeyPush(MOFKEY_RETURN) && (gPlayer.IsDead() || gbClear))

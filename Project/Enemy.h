@@ -30,7 +30,6 @@ public:
 	void SetMesh(CMeshContainer* pm){ m_pMesh = pm; }
 	bool GetShow(){ return m_bShow; }
 	void RenderDebug();
-	CSphere GetSphere() { return CSphere(m_Pos, 0.5f); }
 	void Damage(int dmg);
 	void SetTargetPos(const Vector3& t) { m_TargetPos = t; }
 

@@ -52,13 +52,13 @@ void CEnemy::Initialize(){
  * ŠJŽn
  *
  */
-void CEnemy::Start(const Vector3& p,int t = 0){
+void CEnemy::Start(const Vector3& p,int t){
 	m_Pos = p;
 	m_Rot = Vector3(0, 0, 0);
 	m_bShow = true;
 	m_HP = 5;
 	m_ShotWait = 0;
-	m_ShotWaitSet = 10;
+	m_ShotWaitSet = 40;
 	m_TargetPos = Vector3(0, 0, 0);
 	m_AnimTime = 0;
 
