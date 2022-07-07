@@ -196,6 +196,11 @@ public:
 	* [in]			info			生成情報
 	*/
 	void Initialize(CREATEINFO& info){
+		m_Time = 0.0f;
+		m_UpdateBehavior = info.UpdateBehavior;
+		m_ParameterBehavior = info.ParameterBehavior;
+		m_EnvironmentBehavior = info.EnvironmentBehavior;
+		m_CreateBehavior = info.CreateBehavior;
 	}
 
 	/**
@@ -205,6 +210,54 @@ public:
 	* [in]			pList			パーティクルリスト
 	*/
 	virtual void Update(std::list< CParticle* >* pList){
+		//存在時間の更新
+		m_Time++;
+		//行列の更新
+		m_State.World.RotationZXY(m_State.Rotation);
+		m_State.World.Scaling(m_State.Scale, m_State.World);
+		m_State.World.SetTranslation(m_State.Position);
+		//発生時間経過
+		if (m_Time < m_CreateBehavior.Time)
+		{
+			return;
+		}
+		//パーティクルの生成情報
+		CParticle::CREATEINFO cinfo;
+		for (MofU32 i = 0; i < m_CreateBehavior.Count; i++)
+		{
+			//初期状態の設定
+			m_CreateBehavior.Position.GetParameter(cinfo.State.Position);
+			m_CreateBehavior.Scale.GetParameter(cinfo.State.Scale);
+			m_CreateBehavior.Rotation.GetParameter(cinfo.State.Rotation);
+			m_CreateBehavior.Color.GetParameter(cinfo.State.Color);
+			cinfo.State.Position *= m_State.World;
+			cinfo.State.Scale *= m_State.Scale;
+			cinfo.State.Rotation += m_State.Rotation;
+			cinfo.State.Color *= m_State.Color;
+			cinfo.State.World.RotationZXY(cinfo.State.Rotation);
+			cinfo.State.World.Scaling(cinfo.State.Scale, cinfo.State.World);
+			cinfo.State.World.SetTranslation(cinfo.State.Position);
+			//更新情報の生成
+			m_UpdateBehavior.Move.GetParameter(cinfo.UpdateBehavior.Move);
+			m_UpdateBehavior.Scale.GetParameter(cinfo.UpdateBehavior.Scale);
+			m_UpdateBehavior.Rotation.GetParameter(cinfo.UpdateBehavior.Rotation);
+			m_UpdateBehavior.Color.GetParameter(cinfo.UpdateBehavior.Color);
+			//環境情報の生成
+			cinfo.EnvironmentBehavior.Gravity = m_EnvironmentBehavior.Gravity;
+			//パラメーター情報の生成
+			m_ParameterBehavior.Existence.GetParameter(cinfo.ParameterBehavior.Existence);
+			cinfo.ParameterBehavior.Blending = m_ParameterBehavior.Blending;
+			cinfo.ParameterBehavior.Flag = m_ParameterBehavior.Flag;
+			//テクスチャの設定
+			cinfo.pTexture = m_ParameterBehavior.pTexture;
+			//パーティクルを生成して初期化
+			CParticle* pPartice = new CParticle();
+			pPartice->Initialize(cinfo);
+			//リストに追加
+			pList->push_back(pPartice);
+		}
+		//生成後の時間減少
+		m_Time -= m_CreateBehavior.Time;
 	}
 
 	/**

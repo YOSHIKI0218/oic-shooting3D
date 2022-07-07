@@ -10,6 +10,7 @@
 //INCLUDE
 #include	"GameApp.h"
 #include	"Particle.h"
+#include	"Emitter.h"
 
 //テクスチャクラスの宣言
 
@@ -17,7 +18,9 @@ CTexture				gTexture;
 
 //パーティクルの宣言
 
-CParticle				gParticle;
+std::list< CParticle* >		gParticleList;
+
+CEmitter<MINMAXPARAMETER>	gEmitter;
 
 //カメラ
 CCamera					gCamera;
@@ -164,14 +167,35 @@ MofBool CGameApp::Initialize(void){
 
 	//テクスチャの読み込み
 	gTexture.Load("Flash.dds");
+
+	CEmitter<MINMAXPARAMETER>::CREATEINFO cinfo;
+	cinfo.UpdateBehavior.Color.SetDefaultParameter(Vector4(0, 0, 0, -1 / 60.0f));
+
+	cinfo.ParameterBehavior.Existence.SetDefaultParameter(60);
+	cinfo.ParameterBehavior.Blending = BLEND_ADD;
+	cinfo.ParameterBehavior.Flag = CParticle::BILLBOARD;
+	cinfo.ParameterBehavior.pTexture = &gTexture;
+
+	cinfo.CreateBehavior.Position.Min.SetValue(-5, -5, -5);
+	cinfo.CreateBehavior.Position.Max.SetValue(5, 5, 5);
+
+	cinfo.CreateBehavior.Color.SetDefaultParameter(Vector4(1, 1, 1, 1));
+	cinfo.CreateBehavior.Scale.SetDefaultParameter(Vector3(1, 1, 1));
+
+	cinfo.CreateBehavior.Time = 30;
+	cinfo.CreateBehavior.Count = 10;
+	gEmitter.Initialize(cinfo);
+
+	
+
 	//パーティクルの動作パラメーター設定
-	CParticle::CREATEINFO cinfo;
+	/*CParticle::CREATEINFO cinfo;
 	cinfo.UpdateBehavior.Color.a = -1/60.0f;
 	cinfo.ParameterBehavior.Existence = 60;
 	cinfo.ParameterBehavior.Blending = BLEND_ADD;
 	cinfo.ParameterBehavior.Flag = CParticle::BILLBOARD;
 	cinfo.pTexture = &gTexture;
-	gParticle.Initialize(cinfo);
+	gParticle.Initialize(cinfo);*/
 	return TRUE;
 }
 /*************************************************************************//*!
@@ -189,9 +213,18 @@ MofBool CGameApp::Update(void){
 	UpdateCamera();
 
 	//パーティクルの更新
-	gParticle.Update();
+	gEmitter.Update(&gParticleList);
+	for (std::list<CParticle*>::iterator it = gParticleList.begin(); it != gParticleList.end();) {
+		(*it)->Update();
+		if ((*it)->IsEnd()) {
+			delete (*it);
+			it = gParticleList.erase(it);
+			continue;
+		}
+		++it;
+	}
 	//終了しているならば再生成
-	if (gParticle.IsEnd()) {
+	/*if (gParticle.IsEnd()) {
 		CParticle::CREATEINFO cinfo;
 		cinfo.UpdateBehavior.Color.a = -1 / 60.0f;
 		cinfo.ParameterBehavior.Existence = 60;
@@ -199,7 +232,7 @@ MofBool CGameApp::Update(void){
 		cinfo.ParameterBehavior.Flag = CParticle::BILLBOARD;
 		cinfo.pTexture = &gTexture;
 		gParticle.Initialize(cinfo);
-	}
+	}*/
 	return TRUE;
 }
 /*************************************************************************//*!
@@ -222,7 +255,9 @@ MofBool CGameApp::Render(void){
 	CGraphicsUtilities::RenderGrid(2, 20, MOF_COLOR_WHITE, PLANEAXIS_ALL);
 
 	//パーティクルの描画
-	gParticle.Render();
+	for (std::list<CParticle*>::iterator it = gParticleList.begin(); it != gParticleList.end(); ++it) {
+		(*it)->Render();
+	}
 
 	//描画の終了
 	g_pGraphics->RenderEnd();
@@ -237,7 +272,10 @@ MofBool CGameApp::Render(void){
 *//**************************************************************************/
 MofBool CGameApp::Release(void){
 	//パーティクルの解放
-	gParticle.Release();
+	for (std::list<CParticle*>::iterator it = gParticleList.begin(); it != gParticleList.end();) {
+		delete (*it);
+		it = gParticleList.erase(it);
+	}
 	//テクスチャの解放
 	gTexture.Release();
 	return TRUE;
