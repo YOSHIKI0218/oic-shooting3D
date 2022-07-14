@@ -119,7 +119,7 @@ void CPlayer::Update(bool HorizonMode){
 	{
 		//時間経過とイージング
 		m_TurnTime += CUtilities::GetFrameSecond();
-		float t = MOF_LINSTEP(0.0f,1.5f,m_TurnTime);
+		float t = MOF_LINSTEP(0.0f,8,m_TurnTime);
 		t = sinf(t * MOF_MATH_HALFPI);
 
 		//課題１　宙返りの動作
@@ -128,11 +128,15 @@ void CPlayer::Update(bool HorizonMode){
 		//プレイヤーの座標は半径1.5でX軸にm_Rot.x回転した座標になる
 
 
-		m_Rot.x = MOF_LERP(m_Rot.x, MOF_MATH_2PI, t);
-		m_Pos.y = MOF_LERP(m_Pos.y + 0.75, cosf(MOF_MATH_2PI), t);
+		m_Rot.x = -MOF_MATH_2PI * t;
+		//m_Pos += CVector3(0,sin(),sin())
+		//m_Pos.y = MOF_LERP(m_Pos.y + 0.75, cosf(MOF_MATH_2PI), t);
 		//m_Pos.z = MOF_LERP(m_Pos.z, cosf(-MOF_MATH_QUADPI), t);
 		
-		
+		CVector3 tmpPos = Vector3(0, -1.5, 0);
+		tmpPos.RotationX(m_Rot.x);
+		tmpPos.y += 1.5f;
+		m_Pos = m_TurnPos + tmpPos;
 
 		//宙返り終了
 		if(1.0f <= t)
