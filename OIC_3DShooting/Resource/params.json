@@ -1,0 +1,17 @@
+{
+"field_half_x":9.0,
+"field_half_y":5.0,
+"field_half_z":14.0,
+"background_scroll_speed":1.0,
+"player_speed":0.1,
+"player_rotation_speed":10,
+"player_bullet_speed":0.4,
+"player_shot_count":100,
+"player_shot_interval":5,
+"enemy_count":20,
+"enemy_bullet_speed":2.5,
+"player_max_hp":30,
+"boss1_pattern_change_interval":10.0,
+    "boss1_max_hp": 600,
+    "enemey_hp": 4
+}

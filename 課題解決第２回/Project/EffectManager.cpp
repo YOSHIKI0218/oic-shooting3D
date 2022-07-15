@@ -94,34 +94,112 @@ void CEffectManager::InitCreateInfo(){
 
 	//課題１　プレイヤー弾ヒットエフェクト
 	{
-		m_LifeTime[EMITTER_HIT] = 0;	//エミッターの寿命
+		m_LifeTime[EMITTER_HIT] = 1;	//エミッターの寿命
 		CEmitter<MINMAXPARAMETER>::CREATEINFO& cinfo = m_CreateInfo[EMITTER_HIT];
 
+		cinfo.UpdateBehavior.Color.SetDefaultParameter(CVector4(0,0,0,-1.0f/7));
+		cinfo.UpdateBehavior.Scale.SetDefaultParameter(CVector3(-1.0f / 100,-1.0f/ 100,-1.0f/ 100));
+		cinfo.UpdateBehavior.Move.SetParameter(CVector3(-0.1f,-0.1f,-0.1f),CVector3(0.1f,0.1f,0.1f));
 
+		cinfo.ParameterBehavior.Existence.SetDefaultParameter(7);
+		cinfo.ParameterBehavior.Blending = BLEND_ADD;
+		cinfo.ParameterBehavior.Flag = CParticle::BILLBOARD;
+		cinfo.ParameterBehavior.pTexture = &m_BlueFlash;
+		cinfo.ParameterBehavior.pMesh = NULL;
+
+		cinfo.CreateBehavior.Position.SetDefaultParameter(CVector3(0,0,-1.0f));
+		cinfo.CreateBehavior.Color.SetDefaultParameter(CVector4(1,1,1,1));
+		cinfo.CreateBehavior.Scale.SetDefaultParameter(CVector3(2.0f,2.0f,2.0f));
+		cinfo.CreateBehavior.Time = 0;
+		cinfo.CreateBehavior.Count = 1;
 	}
 	
 	//課題２　爆発エフェクト(フラッシュ)
 	{
-		m_LifeTime[EMITTER_EXPLOTION_FLASH] = 0;	//エミッターの寿命
+		m_LifeTime[EMITTER_EXPLOTION_FLASH] = 1;	//エミッターの寿命
 		CEmitter<MINMAXPARAMETER>::CREATEINFO& cinfo = m_CreateInfo[EMITTER_EXPLOTION_FLASH];
+
+		cinfo.UpdateBehavior.Color.SetDefaultParameter(CVector4(0, 0, 0, -1.0f / 7));
+		cinfo.UpdateBehavior.Scale.SetDefaultParameter(CVector3(1.0f / 7, 1.0f / 7, 1.0f / 7));
+		cinfo.UpdateBehavior.Move.SetParameter(CVector3(-0.1f, -0.1f, -0.1f), CVector3(0.1f, 0.1f, 0.1f));
+
+		cinfo.ParameterBehavior.Existence.SetDefaultParameter(7);
+		cinfo.ParameterBehavior.Blending = BLEND_ADD;
+		cinfo.ParameterBehavior.Flag = CParticle::BILLBOARD;
+		cinfo.ParameterBehavior.pTexture = &m_BlueFlash;
+		cinfo.ParameterBehavior.pMesh = NULL;
+
+		cinfo.CreateBehavior.Position.SetDefaultParameter(CVector3(0, 0, -1.0f));
+		cinfo.CreateBehavior.Color.SetDefaultParameter(CVector4(1, 1, 1, 1));
+		cinfo.CreateBehavior.Scale.SetDefaultParameter(CVector3(3.0f, 3.0f, 3.0f));
+		cinfo.CreateBehavior.Time = 0;
+		cinfo.CreateBehavior.Count = 1;
 
 	}
 	//課題２　爆発エフェクト(煙)
 	{
-		m_LifeTime[EMITTER_EXPLOTION_SMOKE] = 0;	//エミッターの寿命
+		m_LifeTime[EMITTER_EXPLOTION_SMOKE] = 5;	//エミッターの寿命
 		CEmitter<MINMAXPARAMETER>::CREATEINFO& cinfo = m_CreateInfo[EMITTER_EXPLOTION_SMOKE];
+
+		cinfo.UpdateBehavior.Color.SetDefaultParameter(CVector4(0, 0, 0, -1.0f / 7));
+		cinfo.UpdateBehavior.Scale.SetDefaultParameter(CVector3(0.2f / 7, 0.2f / 7, 0.2f / 7));
+		cinfo.UpdateBehavior.Move.SetParameter(CVector3(-0.1f, -0.1f, -0.1f), CVector3(0.1f, 0.1f, 0.1f));
+
+		cinfo.ParameterBehavior.Existence.SetDefaultParameter(7);
+		cinfo.ParameterBehavior.Blending = BLEND_NORMAL;
+		cinfo.ParameterBehavior.Flag = CParticle::BILLBOARD;
+		cinfo.ParameterBehavior.pTexture = &m_Smoke;
+		cinfo.ParameterBehavior.pMesh = NULL;
+
+		cinfo.CreateBehavior.Position.SetDefaultParameter(CVector3(0, 0, -1.0f));
+		cinfo.CreateBehavior.Color.SetDefaultParameter(CVector4(1, 1, 1, 1));
+		cinfo.CreateBehavior.Scale.SetDefaultParameter(CVector3(5.0f, 5.0f, 5.0f));
+		cinfo.CreateBehavior.Time = 5;
+		cinfo.CreateBehavior.Count = 3;
 
 	}
 	//課題２　爆発エフェクト(炎)
 	{
-		m_LifeTime[EMITTER_EXPLOTION_FIRE] = 0;	//エミッターの寿命
+		m_LifeTime[EMITTER_EXPLOTION_FIRE] = 5;	//エミッターの寿命
 		CEmitter<MINMAXPARAMETER>::CREATEINFO& cinfo = m_CreateInfo[EMITTER_EXPLOTION_FIRE];
+
+		cinfo.UpdateBehavior.Color.SetDefaultParameter(CVector4(0, 0, 0, -1.0f / 15.0f));
+		cinfo.UpdateBehavior.Scale.SetDefaultParameter(CVector3(-1.0f / 15.0f, -1.0f / 15.0f, -1.0f / 15.0f));
+		cinfo.UpdateBehavior.Move.SetParameter(CVector3(-0.1f, -0.1f, -0.1f), CVector3(0.1f, 0.1f, 0.1f));
+
+		cinfo.ParameterBehavior.Existence.SetDefaultParameter(15.0f);
+		cinfo.ParameterBehavior.Blending = BLEND_ADD;
+		cinfo.ParameterBehavior.Flag = CParticle::BILLBOARD;
+		cinfo.ParameterBehavior.pTexture = &m_Fire;
+		cinfo.ParameterBehavior.pMesh = NULL;
+
+		cinfo.CreateBehavior.Position.SetDefaultParameter(CVector3(0, 0, -1.0f));
+		cinfo.CreateBehavior.Color.SetDefaultParameter(CVector4(1, 1, 1, 1));
+		cinfo.CreateBehavior.Scale.SetDefaultParameter(CVector3(3.0f, 3.0f, 3.0f));
+		cinfo.CreateBehavior.Time = 3.0f;
+		cinfo.CreateBehavior.Count = 3;
 
 	}
 	//課題２　爆発エフェクト(火の粉)
 	{
-		m_LifeTime[EMITTER_EXPLOTION_SPARK] = 0;	//エミッターの寿命
+		m_LifeTime[EMITTER_EXPLOTION_SPARK] = 5;	//エミッターの寿命
 		CEmitter<MINMAXPARAMETER>::CREATEINFO& cinfo = m_CreateInfo[EMITTER_EXPLOTION_SPARK];
+
+		cinfo.UpdateBehavior.Color.SetDefaultParameter(CVector4(0, 0, 0, -1.0f / 15.0f));
+		cinfo.UpdateBehavior.Scale.SetDefaultParameter(CVector3(-1.0f / 15.0f, -1.0f / 15.0f, -1.0f / 15.0f));
+		cinfo.UpdateBehavior.Move.SetParameter(CVector3(-0.1f, -0.1f, -0.1f), CVector3(0.1f, 0.1f, 0.1f));
+
+		cinfo.ParameterBehavior.Existence.SetDefaultParameter(15.0f);
+		cinfo.ParameterBehavior.Blending = BLEND_ADD;
+		cinfo.ParameterBehavior.Flag = CParticle::BILLBOARD;
+		cinfo.ParameterBehavior.pTexture = &m_RedFlash;
+		cinfo.ParameterBehavior.pMesh = NULL;
+
+		cinfo.CreateBehavior.Position.SetDefaultParameter(CVector3(0, 0, -1.0f));
+		cinfo.CreateBehavior.Color.SetDefaultParameter(CVector4(1, 1, 1, 1));
+		cinfo.CreateBehavior.Scale.SetDefaultParameter(CVector3(3.0f, 3.0f, 3.0f));
+		cinfo.CreateBehavior.Time = 3.0f;
+		cinfo.CreateBehavior.Count = 7;
 
 	}
 	
@@ -129,6 +207,22 @@ void CEffectManager::InitCreateInfo(){
 	{
 		m_LifeTime[EMITTER_AFTERIMAGE] = 0;	//エミッターの寿命
 		CEmitter<MINMAXPARAMETER>::CREATEINFO& cinfo = m_CreateInfo[EMITTER_AFTERIMAGE];
+
+		cinfo.UpdateBehavior.Color.SetDefaultParameter(CVector4(0, 0, 0, -1.0f / 15.0f));
+		cinfo.UpdateBehavior.Scale.SetDefaultParameter(CVector3(-1.0f / 15.0f, -1.0f / 15.0f, -1.0f / 15.0f));
+		cinfo.UpdateBehavior.Move.SetParameter(CVector3(-0.1f, -0.1f, -0.1f), CVector3(0.1f, 0.1f, 0.1f));
+
+		cinfo.ParameterBehavior.Existence.SetDefaultParameter(15.0f);
+		cinfo.ParameterBehavior.Blending = BLEND_ADD;
+		cinfo.ParameterBehavior.Flag = CParticle::BILLBOARD;
+		cinfo.ParameterBehavior.pTexture = &m_RedFlash;
+		cinfo.ParameterBehavior.pMesh = NULL;
+
+		cinfo.CreateBehavior.Position.SetDefaultParameter(CVector3(0, 0, -1.0f));
+		cinfo.CreateBehavior.Color.SetDefaultParameter(CVector4(1, 1, 1, 1));
+		cinfo.CreateBehavior.Scale.SetDefaultParameter(CVector3(3.0f, 3.0f, 3.0f));
+		cinfo.CreateBehavior.Time = 3.0f;
+		cinfo.CreateBehavior.Count = 7;
 
 	}
 	//課題３　プレイヤーの残像粒子

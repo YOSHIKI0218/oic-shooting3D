@@ -69,20 +69,28 @@ void CPlayer::Update(void){
 	// キーボードでの移動
 	if(g_pInput->IsKeyHold(MOFKEY_LEFT))
 	{
+		/*gEffectManager.AddEmitter(EMITTER_AFTERIMAGE);
+		gEffectManager.AddEmitter(EMITTER_AFTERIMAGE_PARTICLE);*/
 		m_Pos.x = max(m_Pos.x - PLAYER_SPEED,-FIELD_HALF_X);
 		Roll -= MOF_MATH_PI;
 	}
 	if(g_pInput->IsKeyHold(MOFKEY_RIGHT))
 	{
+		/*gEffectManager.AddEmitter(EMITTER_AFTERIMAGE);
+		gEffectManager.AddEmitter(EMITTER_AFTERIMAGE_PARTICLE);*/
 		m_Pos.x = min(m_Pos.x + PLAYER_SPEED,FIELD_HALF_X);
 		Roll += MOF_MATH_PI;
 	}
 	if(g_pInput->IsKeyHold(MOFKEY_UP))
 	{
+		/*gEffectManager.AddEmitter(EMITTER_AFTERIMAGE);
+		gEffectManager.AddEmitter(EMITTER_AFTERIMAGE_PARTICLE);*/
 		m_Pos.z = min(m_Pos.z + PLAYER_SPEED,FIELD_HALF_Z);
 	}
 	if(g_pInput->IsKeyHold(MOFKEY_DOWN))
 	{
+		/*gEffectManager.AddEmitter(EMITTER_AFTERIMAGE);
+		gEffectManager.AddEmitter(EMITTER_AFTERIMAGE_PARTICLE);*/
 		m_Pos.z = max(m_Pos.z - PLAYER_SPEED,-FIELD_HALF_Z);
 	}
 	// 回転
@@ -163,6 +171,7 @@ void CPlayer::CollisionEnemy(CEnemy& ene){
 		CSphere ss = m_ShotArray[i].GetSphere();
 		if(ss.CollisionSphere(es))
 		{
+			gEffectManager.AddEmitter(EMITTER_HIT, m_ShotArray[i].GetPosition());
 			ene.Damage(1);
 			m_ShotArray[i].SetShow(false);
 			break;

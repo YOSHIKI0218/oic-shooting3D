@@ -200,6 +200,10 @@ void CEnemy::Damage(int dmg){
 	m_HP -= dmg;
 	if(m_HP <= 0)
 	{
+		gEffectManager.AddEmitter(EMITTER_EXPLOTION_FLASH, m_Pos);
+		gEffectManager.AddEmitter(EMITTER_EXPLOTION_SMOKE, m_Pos);
+		gEffectManager.AddEmitter(EMITTER_EXPLOTION_FIRE, m_Pos);
+		gEffectManager.AddEmitter(EMITTER_EXPLOTION_SPARK, m_Pos);
 		m_bShow = false;
 	}
 }
