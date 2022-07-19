@@ -69,29 +69,26 @@ void CPlayer::Update(void){
 	// キーボードでの移動
 	if(g_pInput->IsKeyHold(MOFKEY_LEFT))
 	{
-		/*gEffectManager.AddEmitter(EMITTER_AFTERIMAGE);
-		gEffectManager.AddEmitter(EMITTER_AFTERIMAGE_PARTICLE);*/
 		m_Pos.x = max(m_Pos.x - PLAYER_SPEED,-FIELD_HALF_X);
 		Roll -= MOF_MATH_PI;
+
+		gEffectManager.AddEmitter(EMITTER_AFTERIMAGE, m_Pos);
 	}
 	if(g_pInput->IsKeyHold(MOFKEY_RIGHT))
 	{
-		/*gEffectManager.AddEmitter(EMITTER_AFTERIMAGE);
-		gEffectManager.AddEmitter(EMITTER_AFTERIMAGE_PARTICLE);*/
 		m_Pos.x = min(m_Pos.x + PLAYER_SPEED,FIELD_HALF_X);
 		Roll += MOF_MATH_PI;
+		gEffectManager.AddEmitter(EMITTER_AFTERIMAGE, m_Pos);
 	}
 	if(g_pInput->IsKeyHold(MOFKEY_UP))
 	{
-		/*gEffectManager.AddEmitter(EMITTER_AFTERIMAGE);
-		gEffectManager.AddEmitter(EMITTER_AFTERIMAGE_PARTICLE);*/
 		m_Pos.z = min(m_Pos.z + PLAYER_SPEED,FIELD_HALF_Z);
+		gEffectManager.AddEmitter(EMITTER_AFTERIMAGE, m_Pos);
 	}
 	if(g_pInput->IsKeyHold(MOFKEY_DOWN))
 	{
-		/*gEffectManager.AddEmitter(EMITTER_AFTERIMAGE);
-		gEffectManager.AddEmitter(EMITTER_AFTERIMAGE_PARTICLE);*/
 		m_Pos.z = max(m_Pos.z - PLAYER_SPEED,-FIELD_HALF_Z);
+		gEffectManager.AddEmitter(EMITTER_AFTERIMAGE, m_Pos);
 	}
 	// 回転
 	float RotSpeed = MOF_ToRadian(10);

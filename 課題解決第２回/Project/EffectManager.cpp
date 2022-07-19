@@ -97,11 +97,11 @@ void CEffectManager::InitCreateInfo(){
 		m_LifeTime[EMITTER_HIT] = 1;	//エミッターの寿命
 		CEmitter<MINMAXPARAMETER>::CREATEINFO& cinfo = m_CreateInfo[EMITTER_HIT];
 
-		cinfo.UpdateBehavior.Color.SetDefaultParameter(CVector4(0,0,0,-1.0f/7));
-		cinfo.UpdateBehavior.Scale.SetDefaultParameter(CVector3(-1.0f / 100,-1.0f/ 100,-1.0f/ 100));
-		cinfo.UpdateBehavior.Move.SetParameter(CVector3(-0.1f,-0.1f,-0.1f),CVector3(0.1f,0.1f,0.1f));
+		cinfo.UpdateBehavior.Color.SetDefaultParameter(CVector4(0,0,0,-1.0f/20));
+		cinfo.UpdateBehavior.Scale.SetDefaultParameter(CVector3(-1.0f / 20,-1.0f/ 20,-1.0f/ 20));
+		cinfo.UpdateBehavior.Move.SetParameter(CVector3(-0.1f,-0.1f,-0.1f),CVector3(-0.1f,-0.2f,-0.1f));
 
-		cinfo.ParameterBehavior.Existence.SetDefaultParameter(7);
+		cinfo.ParameterBehavior.Existence.SetDefaultParameter(20);
 		cinfo.ParameterBehavior.Blending = BLEND_ADD;
 		cinfo.ParameterBehavior.Flag = CParticle::BILLBOARD;
 		cinfo.ParameterBehavior.pTexture = &m_BlueFlash;
@@ -157,6 +157,8 @@ void CEffectManager::InitCreateInfo(){
 		cinfo.CreateBehavior.Time = 5;
 		cinfo.CreateBehavior.Count = 3;
 
+		cinfo.EnvironmentBehavior.Gravity = Vector3(0, 0.1f, 0);
+
 	}
 	//課題２　爆発エフェクト(炎)
 	{
@@ -178,6 +180,8 @@ void CEffectManager::InitCreateInfo(){
 		cinfo.CreateBehavior.Scale.SetDefaultParameter(CVector3(3.0f, 3.0f, 3.0f));
 		cinfo.CreateBehavior.Time = 3.0f;
 		cinfo.CreateBehavior.Count = 3;
+
+		cinfo.EnvironmentBehavior.Gravity = Vector3(0, 0.05f, 0);
 
 	}
 	//課題２　爆発エフェクト(火の粉)
@@ -205,7 +209,7 @@ void CEffectManager::InitCreateInfo(){
 	
 	//課題３　プレイヤーの残像
 	{
-		m_LifeTime[EMITTER_AFTERIMAGE] = 0;	//エミッターの寿命
+		m_LifeTime[EMITTER_AFTERIMAGE] = -1;	//エミッターの寿命
 		CEmitter<MINMAXPARAMETER>::CREATEINFO& cinfo = m_CreateInfo[EMITTER_AFTERIMAGE];
 
 		cinfo.UpdateBehavior.Color.SetDefaultParameter(CVector4(0, 0, 0, -1.0f / 15.0f));
@@ -214,15 +218,13 @@ void CEffectManager::InitCreateInfo(){
 
 		cinfo.ParameterBehavior.Existence.SetDefaultParameter(15.0f);
 		cinfo.ParameterBehavior.Blending = BLEND_ADD;
-		cinfo.ParameterBehavior.Flag = CParticle::BILLBOARD;
-		cinfo.ParameterBehavior.pTexture = &m_RedFlash;
-		cinfo.ParameterBehavior.pMesh = NULL;
+		cinfo.ParameterBehavior.pMesh = &m_PlayerMesh;
 
 		cinfo.CreateBehavior.Position.SetDefaultParameter(CVector3(0, 0, -1.0f));
-		cinfo.CreateBehavior.Color.SetDefaultParameter(CVector4(1, 1, 1, 1));
+		cinfo.CreateBehavior.Color.SetDefaultParameter(CVector4(1, 0, 0, 1));
 		cinfo.CreateBehavior.Scale.SetDefaultParameter(CVector3(3.0f, 3.0f, 3.0f));
 		cinfo.CreateBehavior.Time = 3.0f;
-		cinfo.CreateBehavior.Count = 7;
+		cinfo.CreateBehavior.Count = 1;
 
 	}
 	//課題３　プレイヤーの残像粒子
